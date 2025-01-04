@@ -11,7 +11,7 @@ def create_table(client, name, schema):
         collection_data = {
         "name": name,
         "type": "base",
-        "schema": schema
+        "fields": schema
         }
         collection = client.collections.create(collection_data)
         print(f"collection '{name}' add something here '{schema}'.")
@@ -20,7 +20,7 @@ def create_table(client, name, schema):
 
 
 def main():    
-    client = PocketBase('http://127.0.0.1:8090/')
+    client = PocketBase('http://127.0.0.1:8090')
 
     try:
         authData = client.collection("_superusers").auth_with_password('kaileykobar@gmail.com', 'CARtank66$')
@@ -30,8 +30,8 @@ def main():
         return
 
     schema = [
-        {"name": "something", "type":  "something", "required": True, "unique": False},
-        {"name": "something", "type": "something", "required": False, "unique": False}
+        {"name": "something", "type":  "text", "required": True, "unique": False},
+        {"name": "tempature", "type":  "number", "required": True, "unique": False}
     ]
 
     create_table(client, "TEST_TABLE", schema)
