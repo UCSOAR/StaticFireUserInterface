@@ -1,34 +1,40 @@
 from pocketbase import PocketBase
 from pocketbase.models.collection import Collection
 
-def create_table(client, name, data):
+def create_table(client, name, schema):
     """
     Creates a collection in PocketBase.
 
     """
-    name : str = name
-    data : int = data
     #create a collection
     try:
         collection_data = {
         "name": name,
-        "data": data,
+        "type": "base",
+        "schema": schema
         }
         collection = client.collections.create(collection_data)
-        print(f"collection '{name}' add something here '{data}'.")
+        print(f"collection '{name}' add something here '{schema}'.")
     except Exception as e:
         print(f"error has occured: {e}")
-        
-def main():    
-    client = PocketBase('http://127.0.0.1:8090')
-    authData = client.collection("_superusers").auth_with_password(admin_username, admin_password)
 
-    something = [
-        {"name": "something", "type":  "something", "required": True},
-        {"name": "something", "type": "something", "required": False}
+
+def main():    
+    client = PocketBase('http://127.0.0.1:8090/')
+
+    try:
+        authData = client.collection("_superusers").auth_with_password('kaileykobar@gmail.com', 'CARtank66$')
+        print("Authentication successful.")
+    except:
+        print(f"Authentication failed.")
+        return
+
+    schema = [
+        {"name": "something", "type":  "something", "required": True, "unique": False},
+        {"name": "something", "type": "something", "required": False, "unique": False}
     ]
 
-    create_table(client, "TEST_TABLE", something)
+    create_table(client, "TEST_TABLE", schema)
 
 
 if __name__ == "__main__":
