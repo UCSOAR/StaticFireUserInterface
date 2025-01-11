@@ -14,16 +14,23 @@ export const server_loads = [];
 
 export const dictionary = {
 		"/": [2],
-		"/StaticFire": [6],
-		"/about": [3],
-		"/data": [4],
-		"/live-feed": [5]
+		"/StaticFire": [3],
+		"/about": [4],
+		"/data": [5],
+		"/live-feed": [6]
 	};
 
 export const hooks = {
 	handleError: (({ error }) => { console.error(error) }),
-
-	reroute: (() => {})
+	
+	reroute: (() => {}),
+	transport: {}
 };
 
-export { default as root } from '../root.svelte';
+export const decoders = Object.fromEntries(Object.entries(hooks.transport).map(([k, v]) => [k, v.decode]));
+
+export const hash = false;
+
+export const decode = (type, value) => decoders[type](value);
+
+export { default as root } from '../root.js';

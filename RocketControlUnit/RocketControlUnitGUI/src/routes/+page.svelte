@@ -1,6 +1,6 @@
 <script lang="ts">
-	import "../styles/display.postcss";
-	import Diagram from '$lib/components/Diagram.svelte';
+	import "../styles/static-fire.postcss";
+	import Diagram from '$lib/components/StaticFire.svelte';
 	import { initTimestamps, type Timestamps } from '$lib/timestamps';
 	import { usePocketbase } from '$lib/hooks/usePocketbase';
 	import { initStores, auth, currentState } from '$lib/stores';
@@ -67,7 +67,7 @@
 		timer_period,
 		timer_remaining
 	} = stores;
-	
+
 	onMount(() => {
 		let heartbeatInterval: NodeJS.Timeout;
 
@@ -236,7 +236,7 @@
 			for (let i = 0; i < 3; i++) {
 				await writeStateChange('RSC_IGNITION_TO_LAUNCH');
 				await new Promise(resolve => setTimeout(resolve, 100));
-			} 
+			}
 		}
 
 		wasLiveAtAnyPoint = false;
@@ -316,7 +316,7 @@
 			{pbv4_display}
 		</SlideToggle>
 	</div>
-	
+
 	<div class="sol5_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
 			name="sol5_slider"
@@ -448,9 +448,9 @@
 	{/if}
 
 	<div class="nos1_tare_button">
-		<button 
-			type="button" 
-			class="btn btn-sm variant-filled-secondary" 
+		<button
+			type="button"
+			class="btn btn-sm variant-filled-secondary"
 			on:click={() => performTare("NOS1")}
 		>
 			TARE
@@ -458,9 +458,9 @@
 	</div>
 
 	<div class="nos1_cal_button">
-		<button 
-			type="button" 
-			class="btn btn-sm variant-filled-error" 
+		<button
+			type="button"
+			class="btn btn-sm variant-filled-error"
 			on:click={() => {
 				writeLoadCellCommand("NOS1", "CANCEL", 0);
 				resumeConfirmRemoveWeight("NOS1");}}
@@ -470,9 +470,9 @@
 	</div>
 
 	<div class="nos2_tare_button">
-		<button 
-			type="button" 
-			class="btn btn-sm variant-filled-secondary" 
+		<button
+			type="button"
+			class="btn btn-sm variant-filled-secondary"
 			on:click={() => performTare("NOS2")}
 		>
 			TARE
@@ -480,11 +480,11 @@
 	</div>
 
 	<div class="nos2_cal_button">
-		<button 
-			type="button" 
-			class="btn btn-sm variant-filled-error" 
+		<button
+			type="button"
+			class="btn btn-sm variant-filled-error"
 			on:click={() => {
-				writeLoadCellCommand("NOS2", "CANCEL", 0);	
+				writeLoadCellCommand("NOS2", "CANCEL", 0);
 				resumeConfirmRemoveWeight("NOS2");}}
 		>
 			CAL
@@ -492,9 +492,9 @@
 	</div>
 
 	<div class="rail_tare_button">
-		<button 
-			type="button" 
-			class="btn btn-sm variant-filled-secondary" 
+		<button
+			type="button"
+			class="btn btn-sm variant-filled-secondary"
 			on:click={() => performTare("LAUNCHRAIL")}
 		>
 			TARE
@@ -502,10 +502,10 @@
 	</div>
 
 	<div class="rail_cal_button">
-		<button 
-			type="button" 
-			class="btn btn-sm variant-filled-error" 
-			on:click={() => { 
+		<button
+			type="button"
+			class="btn btn-sm variant-filled-error"
+			on:click={() => {
 				writeLoadCellCommand("LAUNCHRAIL", "CANCEL", 0);
 				resumeConfirmRemoveWeight("LAUNCHRAIL");}}
 		>
