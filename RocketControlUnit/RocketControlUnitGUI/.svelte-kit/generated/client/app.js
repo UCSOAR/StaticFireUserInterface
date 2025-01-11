@@ -14,10 +14,10 @@ export const server_loads = [];
 
 export const dictionary = {
 		"/": [2],
-		"/StaticFire": [3],
-		"/about": [4],
-		"/data": [5],
-		"/live-feed": [6]
+		"/StaticFire": [6],
+		"/about": [3],
+		"/data": [4],
+		"/live-feed": [5]
 	};
 
 export const hooks = {
