@@ -89,8 +89,9 @@ class DatabaseHandler():
             )
         )
 
+    
     @staticmethod
-    def create_table(client, name, schema):
+    def create_table(self, name, schema):
         """
         Creates a collection in PocketBase.
 
@@ -107,30 +108,23 @@ class DatabaseHandler():
         except Exception as e:
             print(f"An error occurred: {e}")
 
-    def main():
-
-        try:
-            authData = DatabaseHandler.client.admins.auth_with_password('kaileykobar@gmail.com', 'CARtank66$')
-            print("Authentication successful.")
-        except Exception as e:
-            print(f"Authentication failed: {e}")
-            return
-
+    def main(self):
+        """
+        creates a table
+        """
         schema = [
             {"name": "something", "type": "text", "required": True, "unique": False},
-            {"name": "temperature", "type": "number", "required": True, "unique": False}
+            {"name": "temperature", "type": "number", "required": True, "unique": False},
         ]
 
-        DatabaseHandler.create_table("TEST_TABLE", schema)
-
-    if __name__ == "__main__":
-        main()
-
-
-
-
-
-
+        try:
+            self.validate_schema(schema)
+            self.create_table("TEST_TABLE", schema)
+        except ValueError as ve:
+            logger.error(f"Schema validation failed: {ve}")
+        except Exception as e:
+            logger.error(f"Unexpected error: {e}")
+   
 
 
     @staticmethod
@@ -178,6 +172,7 @@ class DatabaseHandler():
             DatabaseHandler.client.collection(table_name).create(json_data[table_name])
         except Exception:
             logger.error(f"Failed to create entry in {table_name}: {json_data}")
+            
 
     @staticmethod
     def send_load_cell_cali_to_database(thread_message: Tuple[str, str]):
