@@ -34,7 +34,17 @@ class DatabaseHandler():
         DatabaseHandler.client = Client('http://192.168.0.69:8090')
         DatabaseHandler.client.auth_store.clear()
         DatabaseHandler.client.admins.auth_with_password(db_user, db_password)
-
+        schema = [
+        {"name": "something", "type": "text", "required": True, "unique": False},
+        {"name": "temperature", "type": "number", "required": True, "unique": False},
+        ]
+        try:
+            self.validate_schema(schema)
+            self.create_table("TEST_TABLE", schema)
+        except ValueError as ve:
+            logger.error(f"Schema validation failed: {ve}")
+        except Exception as e:
+            logger.error(f"Unexpected error: {e}")
         DatabaseHandler.client.collection('Heartbeat').subscribe(DatabaseHandler._handle_heartbeat_callback)
         DatabaseHandler.client.collection('CommandMessage').subscribe(DatabaseHandler._handle_command_callback)
         DatabaseHandler.client.collection('LoadCellCommands').subscribe(DatabaseHandler._handle_load_cell_command_callback)
@@ -101,29 +111,12 @@ class DatabaseHandler():
             collection_data = {
             "name": name,
             "type": "base",
-            "fields": schema
+            "schema": schema
             }
             DatabaseHandler.client.collections.create(collection_data)
             print(f"Collection '{name}' created with schema: {schema}")
         except Exception as e:
             print(f"An error occurred: {e}")
-
-    def main(self):
-        """
-        creates a table
-        """
-        schema = [
-            {"name": "something", "type": "text", "required": True, "unique": False},
-            {"name": "temperature", "type": "number", "required": True, "unique": False},
-        ]
-
-        try:
-            self.validate_schema(schema)
-            self.create_table("TEST_TABLE", schema)
-        except ValueError as ve:
-            logger.error(f"Schema validation failed: {ve}")
-        except Exception as e:
-            logger.error(f"Unexpected error: {e}")
    
 
 
@@ -172,7 +165,9 @@ class DatabaseHandler():
             DatabaseHandler.client.collection(table_name).create(json_data[table_name])
         except Exception:
             logger.error(f"Failed to create entry in {table_name}: {json_data}")
-            
+        DatabaseHandler.create_table()
+        DatabaseHandler.client.collection(table_name).create(json_data[table_name])
+
 
     @staticmethod
     def send_load_cell_cali_to_database(thread_message: Tuple[str, str]):
