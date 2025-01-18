@@ -31,20 +31,10 @@ class DatabaseHandler():
         db_user = os.getenv('DB_USER')
         db_password = os.getenv('DB_PASSWORD')
 
-        DatabaseHandler.client = Client('http://192.168.0.69:8090')
+        #DatabaseHandler.client = Client('http://192.168.0.69:8090')
+        DatabaseHandler.client = Client('http://127.0.0.1:8090')
         DatabaseHandler.client.auth_store.clear()
-        DatabaseHandler.client.admins.auth_with_password(db_user, db_password)
-        schema = [
-        {"name": "something", "type": "text", "required": True, "unique": False},
-        {"name": "temperature", "type": "number", "required": True, "unique": False},
-        ]
-        try:
-            self.validate_schema(schema)
-            self.create_table("TEST_TABLE", schema)
-        except ValueError as ve:
-            logger.error(f"Schema validation failed: {ve}")
-        except Exception as e:
-            logger.error(f"Unexpected error: {e}")
+        authData = DatabaseHandler.client.collection("_superusers").auth_with_password('kaileykobar@gmail.com', 'CARtank66$')
         DatabaseHandler.client.collection('Heartbeat').subscribe(DatabaseHandler._handle_heartbeat_callback)
         DatabaseHandler.client.collection('CommandMessage').subscribe(DatabaseHandler._handle_command_callback)
         DatabaseHandler.client.collection('LoadCellCommands').subscribe(DatabaseHandler._handle_load_cell_command_callback)
@@ -115,6 +105,7 @@ class DatabaseHandler():
             }
             DatabaseHandler.client.collections.create(collection_data)
             print(f"Collection '{name}' created with schema: {schema}")
+
         except Exception as e:
             print(f"An error occurred: {e}")
    
