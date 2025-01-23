@@ -59,9 +59,9 @@
 		pt4_pressure,
 		sob_tc1_temperature,
 		sob_tc2_temperature,
-		system_state,
+		tc9,
 		timer_period,
-		timer_remaining
+		pt6_pressure
 	} = stores;
 
 	onMount(() => {
@@ -177,10 +177,10 @@
 	$: sob_tc1_display = $sob_tc1_temperature === undefined ? 'N/A' : $sob_tc1_temperature;
 	$: sob_tc2_display = $sob_tc2_temperature === undefined ? 'N/A' : $sob_tc2_temperature;
 
-	$: system_state_display = $system_state === undefined ? 'N/A' : $system_state.replace('SYS_', '');
+	$: tc9_display = $tc9 === undefined ? 'N/A' : $tc9.replace('SYS_', '');
 
 	$: timer_period_display = $timer_period === undefined ? 'N/A' : ($timer_period / 1000).toFixed(0); // Convert to seconds
-	$: timer_remaining_display = $timer_remaining === undefined ? 'N/A' : ($timer_remaining / 1000).toFixed(0); // Convert to seconds
+	$: pt6_pressure_display = $pt6_pressure === undefined ? 'N/A' : ($pt6_pressure / 1000).toFixed(0); // Convert to seconds
 
 	$: relayStatusOutdated = Date.now() - timestamps.relay_status > 5000;
 	$: combustionControlStatusOutdated = Date.now() - timestamps.combustion_control_status > 5000;
@@ -276,9 +276,9 @@
 		</SlideToggle>
 	</div>
 
-	<div class="sol5_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
+	<div class="pvb8_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
-			name="sol5_slider"
+			name="pvb8_slider"
 			active="bg-primary-500 dark:bg-primary-500"
 			size="sm"
 			bind:checked={$sol5_open}
@@ -288,9 +288,9 @@
 		</SlideToggle>
 	</div>
 
-	<div class="sol6_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
+	<div class="pvb7_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
-			name="sol6_slider"
+			name="pvb7_slider"
 			active="bg-primary-500 dark:bg-primary-500"
 			size="sm"
 			bind:checked={$sol6_open}
@@ -300,9 +300,9 @@
 		</SlideToggle>
 	</div>
 
-	<div class="sol7_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
+	<div class="pvb9_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
-			name="sol7_slider"
+			name="pvb9_slider"
 			active="bg-primary-500 dark:bg-primary-500"
 			size="sm"
 			bind:checked={$sol7_open}
@@ -312,9 +312,9 @@
 		</SlideToggle>
 	</div>
 
-	<div class="sol8a_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
+	<div class="pvb5_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
-			name="sol8a_slider"
+			name="pvb5_slider"
 			active="bg-primary-500 dark:bg-primary-500"
 			size="sm"
 			bind:checked={$sol8a_open}
@@ -324,9 +324,9 @@
 		</SlideToggle>
 	</div>
 
-	<div class="drain_slider combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
+	<div class="pvb6_slider combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
-			name="drain_slider"
+			name="pvb6_slider"
 			active="bg-primary-500 dark:bg-primary-500"
 			size="sm"
 			bind:checked={$drain_open}
@@ -472,7 +472,7 @@
 		<p>{mev_display}</p>
 	</div>
 
-	<div class="upper_pv_pressure">
+	<div class="pt5_pressure">
 		<p>{pt5_pressure_display}</p>
 	</div>
 
@@ -496,16 +496,16 @@
 		<p>{sob_tc2_display}</p>
 	</div>
 
-	<div class="system_state sys_state {sysStateOutdated ? 'outdated' : ''}">
-		<p>{system_state_display}</p>
+	<div class="tc9 sys_state {sysStateOutdated ? 'outdated' : ''}">
+		<p>{tc9_display}</p>
 	</div>
 
 	<div class="timer_period heartbeat {heartbeatOutdated ? 'outdated' : ''}">
 		<p>{timer_period_display}</p>
 	</div>
 
-	<div class="timer_remaining heartbeat {heartbeatOutdated ? 'outdated' : ''}">
-		<p>{timer_remaining_display}</p>
+	<div class="pt6_pressure heartbeat {heartbeatOutdated ? 'outdated' : ''}">
+		<p>{pt6_pressure_display}</p>
 	</div>
 
 	<!-- Render different buttons based on the current state -->

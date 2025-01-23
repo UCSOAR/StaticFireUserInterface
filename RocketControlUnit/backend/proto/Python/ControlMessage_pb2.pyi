@@ -109,7 +109,7 @@ class SystemControl(_message.Message):
     def __init__(self, sys_cmd: _Optional[_Union[SystemControl.Command, str]] = ..., cmd_param: _Optional[int] = ...) -> None: ...
 
 class HeartbeatState(_message.Message):
-    __slots__ = ("timer_state", "timer_period", "timer_remaining")
+    __slots__ = ("timer_state", "timer_period", "pt6_pressure")
     class TimerState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         UNINITIALIZED: _ClassVar[HeartbeatState.TimerState]
@@ -122,8 +122,8 @@ class HeartbeatState(_message.Message):
     COMPLETE: HeartbeatState.TimerState
     TIMER_STATE_FIELD_NUMBER: _ClassVar[int]
     TIMER_PERIOD_FIELD_NUMBER: _ClassVar[int]
-    TIMER_REMAINING_FIELD_NUMBER: _ClassVar[int]
+    pt6_pressure_FIELD_NUMBER: _ClassVar[int]
     timer_state: HeartbeatState.TimerState
     timer_period: int
-    timer_remaining: int
-    def __init__(self, timer_state: _Optional[_Union[HeartbeatState.TimerState, str]] = ..., timer_period: _Optional[int] = ..., timer_remaining: _Optional[int] = ...) -> None: ...
+    pt6_pressure: int
+    def __init__(self, timer_state: _Optional[_Union[HeartbeatState.TimerState, str]] = ..., timer_period: _Optional[int] = ..., pt6_pressure: _Optional[int] = ...) -> None: ...

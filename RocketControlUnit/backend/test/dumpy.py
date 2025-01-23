@@ -53,7 +53,7 @@ def combustion_control_write():
 def dmb_pressure_write():
     pb.collection("DmbPressure").create(
         {
-            "upper_pv_pressure": random_int(),
+            "pt5_pressure": random_int(),
         }
     )
 

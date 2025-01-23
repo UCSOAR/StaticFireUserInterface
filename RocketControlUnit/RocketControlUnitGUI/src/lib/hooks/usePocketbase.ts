@@ -110,8 +110,8 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 
 		// Subscribe to changes in the 'DmbPressure' collection
 		pocketbase.collection('DmbPressure').subscribe('*', (e) => {
-			stores.upper_pv_pressure.set(
-				e.record.upper_pv_pressure < -100000 ? 'DC' : Math.round(e.record.upper_pv_pressure / 1000)
+			stores.pt5_pressure.set(
+				e.record.pt5_pressure < -100000 ? 'DC' : Math.round(e.record.pt5_pressure / 1000)
 			);
 			timestamps.dmb_pressure = Date.now();
 		});
@@ -174,7 +174,7 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 
 		// Subscribe to changes in the 'sys_state' collection
 		pocketbase.collection('sys_state').subscribe('*', (e) => {
-			stores.system_state.set(e.record.sys_state);
+			stores.tc9.set(e.record.sys_state);
 			currentState.set(e.record.rocket_state);
 			timestamps.sys_state = Date.now();
 		});
@@ -183,7 +183,7 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 		pocketbase.collection('hb_state').subscribe('*', (e) => {
 			stores.timer_state.set(e.record.timer_state);
 			stores.timer_period.set(e.record.timer_period);
-			stores.timer_remaining.set(e.record.timer_remaining);
+			stores.pt6_pressure.set(e.record.pt6_pressure);
 
 			timestamps.heartbeat = Date.now();
 		});

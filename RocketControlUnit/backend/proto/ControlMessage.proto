@@ -128,5 +128,5 @@ message HeartbeatState {
  
     TimerState timer_state = 1; // The current state of the timer
     uint32 timer_period = 2; // The original period of the timer in milliseconds
-    uint32 timer_remaining = 3; // The remaining time on the timer in milliseconds
+    uint32 pt6_pressure = 3; // The remaining time on the timer in milliseconds
 }

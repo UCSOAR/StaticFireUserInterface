@@ -38,10 +38,10 @@ export interface Stores {
 	pt4_pressure: Writable<string | number | undefined>;
 	sob_tc1_temperature: Writable<string | number | undefined>;
 	sob_tc2_temperature: Writable<string | number | undefined>;
-	system_state: Writable<string | undefined>;
+	tc9: Writable<string | undefined>;
 	timer_state: Writable<string | undefined>;
 	timer_period: Writable<number | undefined>;
-	timer_remaining: Writable<number | undefined>;
+	pt6_pressure: Writable<number | undefined>;
 }
 
 export const initStores = () => {
@@ -80,9 +80,9 @@ export const initStores = () => {
 		pt4_pressure: writable<string | number | undefined>(undefined),
 		sob_tc1_temperature: writable<string | number | undefined>(undefined),
 		sob_tc2_temperature: writable<string | number | undefined>(undefined),
-		system_state: writable<string | undefined>(undefined),
+		tc9: writable<string | undefined>(undefined),
 		timer_state: writable<string | undefined>(undefined),
 		timer_period: writable<number | undefined>(undefined),
-		timer_remaining: writable<number | undefined>(undefined)
+		pt6_pressure: writable<number | undefined>(undefined)
 	};
 };

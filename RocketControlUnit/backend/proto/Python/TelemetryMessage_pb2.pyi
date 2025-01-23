@@ -133,10 +133,10 @@ class Flash(_message.Message):
     def __init__(self, sector_address: _Optional[int] = ..., logging_rate: _Optional[int] = ...) -> None: ...
 
 class DmbPressure(_message.Message):
-    __slots__ = ("upper_pv_pressure",)
-    UPPER_PV_PRESSURE_FIELD_NUMBER: _ClassVar[int]
-    upper_pv_pressure: int
-    def __init__(self, upper_pv_pressure: _Optional[int] = ...) -> None: ...
+    __slots__ = ("pt5_pressure",)
+    pt5_pressure_FIELD_NUMBER: _ClassVar[int]
+    pt5_pressure: int
+    def __init__(self, pt5_pressure: _Optional[int] = ...) -> None: ...
 
 class PbbPressure(_message.Message):
     __slots__ = ("ib_pressure", "lower_pv_pressure")

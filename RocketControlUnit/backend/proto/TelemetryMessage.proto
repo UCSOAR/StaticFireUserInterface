@@ -93,7 +93,7 @@ message Flash {
 }
 
 message DmbPressure{
-    int32 upper_pv_pressure = 1; // pressure vessel pressure
+    int32 pt5_pressure = 1; // pressure vessel pressure
 }
 
 /* PBB -> DMB Messages ---------------------------------------------------------------- */
