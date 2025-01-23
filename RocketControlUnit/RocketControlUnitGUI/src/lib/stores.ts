@@ -25,7 +25,7 @@ export interface Stores {
 	rcu_tc2_temperature: Writable<string | number | undefined>;
 	battery_voltage: Writable<any>;
 	power_source: Writable<any>;
-	upper_pv_pressure: Writable<string | number | undefined>;
+	pt5_pressure: Writable<string | number | undefined>;
 	rocket_mass: Writable<any>;
 	nos1_mass: Writable<any>;
 	nos2_mass: Writable<any>;
@@ -67,7 +67,7 @@ export const initStores = () => {
 		rcu_tc2_temperature: writable<string | number | undefined>(undefined),
 		battery_voltage: writable(undefined),
 		power_source: writable(undefined),
-		upper_pv_pressure: writable<string | number | undefined>(undefined),
+		pt5_pressure: writable<string | number | undefined>(undefined),
 		rocket_mass: writable(undefined),
 		nos1_mass: writable(undefined),
 		nos2_mass: writable(undefined),

@@ -47,7 +47,7 @@
         mev_open,
         rcu_tc1_temperature,
         rcu_tc2_temperature,
-		upper_pv_pressure,
+		pt5_pressure,
 		rocket_mass,
 		nos1_mass,
 		nos2_mass,
@@ -158,7 +158,7 @@
 
 	$: mev_display = $mev_open === undefined ? 'N/A' : $mev_open ? 'OPEN' : 'CLOSE';
 
-	$: upper_pv_display = $upper_pv_pressure === undefined ? 'DC' : $upper_pv_pressure;
+	$: pt5_pressure_display = $pt5_pressure === undefined ? 'DC' : Number($pt5_pressure).toFixed(2);
 
 	$: rocket_mass_display = $rocket_mass === undefined ? 'N/A' : Number($rocket_mass).toFixed(2);
 
@@ -211,25 +211,6 @@
 		if (box1_display === 'LIVE' || box2_display === 'LIVE') {
 			wasLiveAtAnyPoint = true;
 		}
-	}
-
-	const handleLaunchSequence = async () => {
-		await writeArbitraryCommand('NODE_RC', 'RC_IGNITE_PAD_BOX1');
-		await writeArbitraryCommand('NODE_RC', 'RC_IGNITE_PAD_BOX2');
-
-		const pollInterval = setInterval(pollIgnitors, 100);
-		await new Promise(resolve => setTimeout(resolve, 3500));
-
-		clearInterval(pollInterval);
-
-		if (wasLiveAtAnyPoint) {
-			for (let i = 0; i < 3; i++) {
-				await writeStateChange('RSC_IGNITION_TO_LAUNCH');
-				await new Promise(resolve => setTimeout(resolve, 100));
-			}
-		}
-
-		wasLiveAtAnyPoint = false;
 	}
 
 	const performTare = (loadcell: string) => {
@@ -492,7 +473,7 @@
 	</div>
 
 	<div class="upper_pv_pressure">
-		<p>{upper_pv_display}</p>
+		<p>{pt5_pressure_display}</p>
 	</div>
 
 	<div class="rocket_mass launch_rail_load_cell {launchRailLoadCellOutdated ? 'outdated' : ''}">
@@ -600,14 +581,6 @@
 			on:click={() => instantStateChange("RSC_ANY_TO_ABORT")}
 		>
 			Go to Abort
-		</button>
-	{:else if $currentState == "RS_IGNITION"}
-		<button
-			class="btn variant-filled-error next-state-btn"
-			style="top: calc(var(--container-width) * 0.47);"
-			on:click={() => handleLaunchSequence()}
-		>
-			LAUNCH
 		</button>
 		<button
 			class="btn variant-filled-secondary next-state-btn"
