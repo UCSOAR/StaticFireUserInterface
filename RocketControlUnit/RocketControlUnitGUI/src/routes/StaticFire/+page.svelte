@@ -160,7 +160,7 @@
 
 	$:  power_display = $power_source === undefined ? 'N/A' : $power_source ? 'ROCKET' : 'GROUND';
 
-	$:  upper_pv_display = $upper_pv_pressure === undefined ? 'DC' : $upper_pv_pressure;
+	$:  upper_pv_display = $upper_pv_pressure === undefined ? 'N/A' : Number($upper_pv_pressure).toFixed(2)
 
 	$:  rocket_mass_display = $rocket_mass === undefined ? 'N/A' : Number($rocket_mass).toFixed(2);
 
