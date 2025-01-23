@@ -47,13 +47,10 @@
         mev_open,
         rcu_tc1_temperature,
         rcu_tc2_temperature,
-        battery_voltage,
-		power_source,
 		upper_pv_pressure,
 		rocket_mass,
 		nos1_mass,
 		nos2_mass,
-		ib_pressure,
 		lower_pv_pressure,
 		pv_temperature,
 		pt1_pressure,
@@ -63,7 +60,6 @@
 		sob_tc1_temperature,
 		sob_tc2_temperature,
 		system_state,
-		timer_state,
 		timer_period,
 		timer_remaining
 	} = stores;
@@ -155,16 +151,12 @@
 	$: box1_display = $box1_on === undefined ? 'N/A' : $box1_on ? 'LIVE' : 'DEAD';
 	$: box2_display = $box2_on === undefined ? 'N/A' : $box2_on ? 'LIVE' : 'DEAD';
 
-	$: vent_display = $vent_open === undefined ? 'N/A' : $vent_open ? 'OPEN' : 'CLOSED';
-	$: drain_display = $drain_open === undefined ? 'N/A' : $drain_open ? 'OPEN' : 'CLOSED';
+	$: drain_display = $drain_open === undefined ? 'N/A' : $drain_open ? 'OPEN' : 'CLOSE';
 
 	$: rcu_tc1_display = $rcu_tc1_temperature === undefined ? 'N/A' : $rcu_tc1_temperature;
 	$: rcu_tc2_display = $rcu_tc2_temperature === undefined ? 'N/A' : $rcu_tc2_temperature;
 
-	$: mev_display = $mev_open === undefined ? 'N/A' : $mev_open ? 'OPEN' : 'CLOSED';
-
-	$: battery_display = $battery_voltage === undefined ? 'N/A' : $battery_voltage;
-	$: power_display = $power_source === undefined ? 'N/A' : $power_source ? 'ROCKET' : 'GROUND';
+	$: mev_display = $mev_open === undefined ? 'N/A' : $mev_open ? 'OPEN' : 'CLOSE';
 
 	$: upper_pv_display = $upper_pv_pressure === undefined ? 'DC' : $upper_pv_pressure;
 
@@ -173,7 +165,6 @@
 	$: nos1_mass_display = $nos1_mass === undefined ? 'N/A' : Number($nos1_mass).toFixed(2);
 	$: nos2_mass_display = $nos2_mass === undefined ? 'N/A' : Number($nos2_mass).toFixed(2);
 
-	$: ib_pressure_display = $ib_pressure === undefined ? 'N/A' : $ib_pressure;
 	$: lower_pv_display = $lower_pv_pressure === undefined ? 'N/A' : $lower_pv_pressure;
 
 	$: pv_temperature_display = $pv_temperature === undefined ? 'N/A' : $pv_temperature;
@@ -188,7 +179,6 @@
 
 	$: system_state_display = $system_state === undefined ? 'N/A' : $system_state.replace('SYS_', '');
 
-	$: timer_state_display = $timer_state === undefined ? 'N/A' : $timer_state;
 	$: timer_period_display = $timer_period === undefined ? 'N/A' : ($timer_period / 1000).toFixed(0); // Convert to seconds
 	$: timer_remaining_display = $timer_remaining === undefined ? 'N/A' : ($timer_remaining / 1000).toFixed(0); // Convert to seconds
 
@@ -256,18 +246,6 @@
 
 <div class="container">
 	<Diagram />
-
-	<div class="ac1_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
-		<SlideToggle
-			name="ac1_slider"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$ac1_open}
-			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_AC1', 'RCU_CLOSE_AC1')}
-		>
-			{ac1_display}
-		</SlideToggle>
-	</div>
 
 	<div class="pbv1_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
@@ -365,30 +343,6 @@
 		</SlideToggle>
 	</div>
 
-	<div class="sol8b_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
-		<SlideToggle
-			name="sol8b_slider"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$sol8b_open}
-			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_SOL8B', 'RCU_CLOSE_SOL8B')}
-		>
-			{sol8b_display}
-		</SlideToggle>
-	</div>
-
-	<div class="vent_slider combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
-		<SlideToggle
-			name="vent_slider"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$vent_open}
-			on:click={(e) => handleSliderChange(e, 'NODE_DMB', 'RSC_OPEN_VENT', 'RSC_CLOSE_VENT')}
-		>
-			{vent_display}
-		</SlideToggle>
-	</div>
-
 	<div class="drain_slider combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
 			name="drain_slider"
@@ -398,24 +352,6 @@
 			on:click={(e) => handleSliderChange(e, 'NODE_DMB', 'RSC_OPEN_DRAIN', 'RSC_CLOSE_DRAIN')}
 		>
 			{drain_display}
-		</SlideToggle>
-	</div>
-
-	<div class="power_source_slider battery {batteryOutdated  ? 'outdated' : ''}">
-		<SlideToggle
-			name="power_source_slider"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$power_source}
-			on:click={(e) =>
-				handleSliderChange(
-					e,
-					'NODE_DMB',
-					'RSC_POWER_TRANSITION_ONBOARD',
-					'RSC_POWER_TRANSITION_EXTERNAL'
-				)}
-		>
-			{power_display}
 		</SlideToggle>
 	</div>
 
@@ -555,20 +491,12 @@
 		<p>{mev_display}</p>
 	</div>
 
-	<div class="battery_voltage  battery {batteryOutdated ? 'outdated' : ''}">
-		<p>{battery_display}</p>
-	</div>
-
 	<div class="upper_pv_pressure">
 		<p>{upper_pv_display}</p>
 	</div>
 
 	<div class="rocket_mass launch_rail_load_cell {launchRailLoadCellOutdated ? 'outdated' : ''}">
 		<p>{rocket_mass_display}</p>
-	</div>
-
-	<div class="ib_pressure pbb_pressure {pbbPressureOutdated ? 'outdated' : ''}">
-		<p>{ib_pressure_display}</p>
 	</div>
 
 	<div class="lower_pv_pressure pbb_pressure {pbbPressureOutdated ? 'outdated' : ''}">
@@ -589,10 +517,6 @@
 
 	<div class="system_state sys_state {sysStateOutdated ? 'outdated' : ''}">
 		<p>{system_state_display}</p>
-	</div>
-
-	<div class="timer_state heartbeat {heartbeatOutdated ? 'outdated' : ''}">
-		<p>{timer_state_display}</p>
 	</div>
 
 	<div class="timer_period heartbeat {heartbeatOutdated ? 'outdated' : ''}">
