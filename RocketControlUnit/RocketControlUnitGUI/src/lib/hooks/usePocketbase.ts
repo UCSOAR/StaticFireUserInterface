@@ -118,7 +118,7 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 
 		// Subscribe to changes in the 'LaunchRailLoadCell' collection
 		pocketbase.collection('LaunchRailLoadCell').subscribe('*', (e) => {
-			stores.rocket_mass.set(e.record.rocket_mass);
+			stores.tc8.set(e.record.tc8);
 			timestamps.launch_rail_load_cell = Date.now();
 		});
 
@@ -135,8 +135,8 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 			stores.ib_pressure.set(
 				e.record.ib_pressure < -100000 ? 'DC' : Math.round(e.record.ib_pressure / 1000)
 			);
-			stores.lower_pv_pressure.set(
-				e.record.lower_pv_pressure < -100000 ? 'DC' : Math.round(e.record.lower_pv_pressure / 1000)
+			stores.tc5.set(
+				e.record.tc5 < -100000 ? 'DC' : Math.round(e.record.tc5 / 1000)
 			);
 
 			timestamps.pbb_pressure = Date.now();
@@ -144,7 +144,7 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 
 		// Subscribe to changes in the 'PbbTemperature' collection
 		pocketbase.collection('PbbTemperature').subscribe('*', (e) => {
-			stores.pv_temperature.set(
+			stores.tc3.set(
 				e.record.ib_temperature === 9999 ? 'DC' : Math.round(e.record.ib_temperature / 100)
 			);
 			timestamps.pbb_temperature = Date.now();
@@ -162,10 +162,10 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 
 		// Subscribe to changes in the 'SobTemperature' collection
 		pocketbase.collection('SobTemperature').subscribe('*', (e) => {
-			stores.sob_tc1_temperature.set(
+			stores.nos3_temperature.set(
 				e.record.tc1_temperature === 9999 ? 'DC' : Math.round(e.record.tc1_temperature / 100)
 			);
-			stores.sob_tc2_temperature.set(
+			stores.tc6_temperature.set(
 				e.record.tc2_temperature === 9999 ? 'DC' : Math.round(e.record.tc2_temperature / 100)
 			);
 
@@ -174,7 +174,7 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 
 		// Subscribe to changes in the 'sys_state' collection
 		pocketbase.collection('sys_state').subscribe('*', (e) => {
-			stores.tc9.set(e.record.sys_state);
+			stores.rcu_tc9.set(e.record.sys_state);
 			currentState.set(e.record.rocket_state);
 			timestamps.sys_state = Date.now();
 		});
@@ -182,7 +182,7 @@ export const usePocketbase = (timestamps: Timestamps, stores: Stores) => {
 		// Subscribe to changes in the 'HeartbeatTelemetry' collection
 		pocketbase.collection('hb_state').subscribe('*', (e) => {
 			stores.timer_state.set(e.record.timer_state);
-			stores.timer_period.set(e.record.timer_period);
+			stores.tc4.set(e.record.tc4);
 			stores.pt6_pressure.set(e.record.pt6_pressure);
 
 			timestamps.heartbeat = Date.now();

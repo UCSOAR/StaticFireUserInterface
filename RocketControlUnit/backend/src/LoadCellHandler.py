@@ -202,7 +202,7 @@ def get_voltage_and_load_cell_json(json_str: str) -> Tuple[float, str]:
         voltages.append(json_data[load_cell]["nos2_mass"])
     elif load_cell == "launchRailLoadCell":
         load_cell_names.append("LAUNCHRAIL")
-        voltages.append(json_data[load_cell]["rocket_mass"])
+        voltages.append(json_data[load_cell]["tc8"])
 
     return voltages, load_cell_names
 
@@ -246,9 +246,9 @@ def process_workq_message(message: WorkQ_Message, load_cells: Dict[str, LoadCell
         db_load_cell_package["source"] = "LOADCELL"
         db_load_cell_package["target"] = "RCU"
         if "LAUNCHRAIL" in load_cell_names:
-            rocket_mass = load_cells["LAUNCHRAIL"].consume_incoming_voltage(voltages[0])
+            tc8 = load_cells["LAUNCHRAIL"].consume_incoming_voltage(voltages[0])
             db_load_cell_package["launchRailLoadCell"] = {}
-            db_load_cell_package["launchRailLoadCell"]["rocket_mass"] = rocket_mass
+            db_load_cell_package["launchRailLoadCell"]["tc8"] = tc8
 
         elif "NOS1" in load_cell_names:
             nos1_mass = load_cells["NOS1"].consume_incoming_voltage(voltages[0])

@@ -101,7 +101,7 @@ def imu_write():
 def lr_loadcell_write():
     pb.collection("LaunchRailLoadCell").create(
         {
-            "rocket_mass": random_int(),
+            "tc8": random_int(),
         }
     )
 
@@ -129,7 +129,7 @@ def pbb_pressure_write():
     pb.collection("PbbPressure").create(
         {
             "ib_pressure": random_int(),
-            "lower_pv_pressure": random_int(),
+            "tc5": random_int(),
         }
     )
 
@@ -138,7 +138,7 @@ def pbb_temperature_write():
     pb.collection("PbbTemperature").create(
         {
             "ib_temperature": random_int(),
-            "pv_temperature": random_int(),
+            "tc3": random_int(),
         }
     )
 

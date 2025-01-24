@@ -139,20 +139,20 @@ class DmbPressure(_message.Message):
     def __init__(self, pt5_pressure: _Optional[int] = ...) -> None: ...
 
 class PbbPressure(_message.Message):
-    __slots__ = ("ib_pressure", "lower_pv_pressure")
+    __slots__ = ("ib_pressure", "tc5")
     IB_PRESSURE_FIELD_NUMBER: _ClassVar[int]
-    LOWER_PV_PRESSURE_FIELD_NUMBER: _ClassVar[int]
+    tc5_FIELD_NUMBER: _ClassVar[int]
     ib_pressure: int
-    lower_pv_pressure: int
-    def __init__(self, ib_pressure: _Optional[int] = ..., lower_pv_pressure: _Optional[int] = ...) -> None: ...
+    tc5: int
+    def __init__(self, ib_pressure: _Optional[int] = ..., tc5: _Optional[int] = ...) -> None: ...
 
 class PbbTemperature(_message.Message):
-    __slots__ = ("ib_temperature", "pv_temperature")
+    __slots__ = ("ib_temperature", "tc3")
     IB_TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
-    PV_TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
+    tc3_FIELD_NUMBER: _ClassVar[int]
     ib_temperature: int
-    pv_temperature: int
-    def __init__(self, ib_temperature: _Optional[int] = ..., pv_temperature: _Optional[int] = ...) -> None: ...
+    tc3: int
+    def __init__(self, ib_temperature: _Optional[int] = ..., tc3: _Optional[int] = ...) -> None: ...
 
 class CombustionControlStatus(_message.Message):
     __slots__ = ("vent_open", "drain_open", "mev_open")
@@ -231,10 +231,10 @@ class PadBoxStatus(_message.Message):
     def __init__(self, continuity_1: bool = ..., continuity_2: bool = ..., box1_on: bool = ..., box2_on: bool = ...) -> None: ...
 
 class LaunchRailLoadCell(_message.Message):
-    __slots__ = ("rocket_mass",)
-    ROCKET_MASS_FIELD_NUMBER: _ClassVar[int]
-    rocket_mass: int
-    def __init__(self, rocket_mass: _Optional[int] = ...) -> None: ...
+    __slots__ = ("tc8",)
+    tc8_FIELD_NUMBER: _ClassVar[int]
+    tc8: int
+    def __init__(self, tc8: _Optional[int] = ...) -> None: ...
 
 class SobTemperature(_message.Message):
     __slots__ = ("tc1_temperature", "tc2_temperature")

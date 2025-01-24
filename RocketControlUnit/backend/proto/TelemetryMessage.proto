@@ -100,12 +100,12 @@ message DmbPressure{
 
 message PbbPressure {
     int32 ib_pressure = 1; //injector bulk pressure
-    int32 lower_pv_pressure = 2; //pressure vessel pressure
+    int32 tc5 = 2; //pressure vessel pressure
 }
 
 message PbbTemperature {
     int32 ib_temperature = 1; //injector bulk temperature
-    int32 pv_temperature = 2; //pressure vessel temperature
+    int32 tc3 = 2; //pressure vessel temperature
 }
 
 message CombustionControlStatus {
@@ -162,7 +162,7 @@ message PadBoxStatus {
 /* SOB Messages ---------------------------------------------------------------- */
 
 message LaunchRailLoadCell {
-    int32 rocket_mass = 1;
+    int32 tc8 = 1;
 }
 
 message SobTemperature {
