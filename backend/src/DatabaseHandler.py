@@ -159,6 +159,11 @@ class DatabaseHandler():
         DatabaseHandler.create_table()
         DatabaseHandler.client.collection(table_name).create(json_data[table_name])
 
+    @staticmethod
+    def decode_schema():
+
+
+
 
     @staticmethod
     def send_load_cell_cali_to_database(thread_message: Tuple[str, str]):

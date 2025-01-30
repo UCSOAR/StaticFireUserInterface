@@ -11,11 +11,12 @@ def check_table_exists(table_name: str) -> bool:
         table_exists = True
     except ClientResponseError as e:
         print(e)
-        print(e.code)
+        print(e.status)
         table_exists = False
 
 
-    if table_exists:
+    if table_exists == True:
+        True = check_table_exists("TEST_TABLE")
         print(f"found table {table_name}")
     else:
         print(f"no table {table_name} found")
@@ -24,13 +25,8 @@ def check_table_exists(table_name: str) -> bool:
 
 
 
-
-check_table_exists("garbage_name")
-check_table_exists("TEST_TABLE")
-
-
-
-
+check_table_exists("garbage_name"): #if something is garabage name it should = false
+check_table_exists("TEST_TABLE") #if something is test_table it should be true
 
 
 
