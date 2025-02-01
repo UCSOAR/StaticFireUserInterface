@@ -5,28 +5,36 @@ from pocketbase.utils import ClientResponseError
 def check_table_exists(table_name: str) -> bool:
 
     client = Client('http://127.0.0.1:8090')
-
-    try:
-        client.collection(table_name).create({"something": 'Tel', "tempature": 1})
-        table_exists = True
-    except ClientResponseError as e:
-        print(e)
-        print(e.status)
-        table_exists = False
+    authData = client.collection("_superusers").auth_with_password('kaileykobar@gmail.com', 'CARtank66$');
+    #try:
+    #print(client.collection(table_name))
+    #print(client.record_service)
 
 
-    if table_exists == True:
-        True = check_table_exists("TEST_TABLE")
-        print(f"found table {table_name}")
+    #table should pass if the table name exists or not. giving parameters it wants to look for (table name)
+    print(client.collections.get_full_list(query_params=table_name))
+    if table_name in client.collections.get_full_list():
+        print("true")
     else:
-        print(f"no table {table_name} found")
+        print("false")
+        #table_exists = True
+    # except ClientResponseError as e:
+    #     print(e)
+    #     print(e.status)
+    #     table_exists = False
 
-    return table_exists
+
+    # if table_exists:
+    #     print(f"found table {table_name}")
+    # else:
+    #     print(f"no table {table_name} found")
+
+    # return table_exists
 
 
 
-check_table_exists("garbage_name"): #if something is garabage name it should = false
-check_table_exists("TEST_TABLE") #if something is test_table it should be true
+check_table_exists("TEST_TABLE") #if something is garabage name it should false
+#check_table_exists("TEST_TABLE") #if something is test_table it should be true
 
 
 
