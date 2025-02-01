@@ -1,10 +1,20 @@
 from pocketbase import Client
 from pocketbase.utils import ClientResponseError
 
+client = Client('http://127.0.0.1:8090')
+
+def create_table(name, schema):
+    #create a collection
+    collection_data = {
+    "name": name,
+    "type": "base",
+    "schema": schema
+    }
+    client.collections.create(collection_data)
+    print(f"Collection '{name}' created with schema: {schema}")
 
 def check_table_exists(table_name: str) -> bool:
 
-    client = Client('http://127.0.0.1:8090')
     authData = client.collection("_superusers").auth_with_password('kaileykobar@gmail.com', 'CARtank66$');
     #try:
     #print(client.collection(table_name))
@@ -12,11 +22,17 @@ def check_table_exists(table_name: str) -> bool:
 
 
     #table should pass if the table name exists or not. giving parameters it wants to look for (table name)
-    print(client.collections.get_full_list(query_params=table_name))
+    try:
+        client.collections.get_one(table_name)
+        client.collection(table_name).create([table_name])
+    except:
+        create_table(table_name)  
+
     if table_name in client.collections.get_full_list():
         print("true")
     else:
         print("false")
+
         #table_exists = True
     # except ClientResponseError as e:
     #     print(e)
@@ -38,51 +54,3 @@ check_table_exists("TEST_TABLE") #if something is garabage name it should false
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def create_table(self, name, schema):
-#         """
-#         Creates a collection in PocketBase.
-
-#         """
-#         #create a collection
-#         try:
-#             collection_data = {
-#             "name": name,
-#             "type": "base",
-#             "schema": schema
-#             }
-#             client.collections.create(collection_data)
-#             print(f"Collection '{name}' created with schema: {schema}")
-
-#         except Exception as e:
-#             print(f"An error occurred: {e}")
