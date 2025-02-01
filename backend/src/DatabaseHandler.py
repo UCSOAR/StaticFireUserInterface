@@ -153,17 +153,12 @@ class DatabaseHandler():
 
         # Push the JSON data to PocketBase using the correct schema
         try:
+            
             DatabaseHandler.client.collection(table_name).create(json_data[table_name])
         except Exception:
             logger.error(f"Failed to create entry in {table_name}: {json_data}")
         DatabaseHandler.create_table()
         DatabaseHandler.client.collection(table_name).create(json_data[table_name])
-
-    @staticmethod
-    def decode_schema():
-
-
-
 
     @staticmethod
     def send_load_cell_cali_to_database(thread_message: Tuple[str, str]):

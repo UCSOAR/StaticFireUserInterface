@@ -3,6 +3,40 @@ from pocketbase.utils import ClientResponseError
 
 client = Client('http://127.0.0.1:8090')
 
+def send_telemetry_message_to_database(json_data: str):
+    """
+    Send a preserialized JSON message to the database.
+
+    Note: The third key in the JSON data is assumed to be the table name
+    """
+    # Extract the table name from the JSON data
+    json_data = (json_data)
+    if len(list(json_data.keys())) < 3:
+        (f"Received, poorly formed json: {json_data}")
+        return
+
+    table_name = list(json_data.keys())[2]
+
+    (f"Adding an entry to the {table_name} table")
+    (f"Entry: {json_data[table_name]}")
+
+    # Push the JSON data to PocketBase using the correct schema
+    try:
+        client.collection(table_name).create(json_data[table_name])
+    except Exception:
+        (f"Failed to create entry in {table_name}: {json_data}")
+        create_table()
+        client.collection(table_name).create(json_data[table_name])
+json_data = {
+    "table_tc_data": 
+    {"Tc_1": 3,
+    "Tc_2": 4}
+    }
+
+
+schema = send_telemetry_message_to_database(json_data)
+schema = json_data[0]
+
 def create_table(name, schema):
     #create a collection
     collection_data = {
