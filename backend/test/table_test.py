@@ -15,6 +15,7 @@ def tokenfunc():
 def updated_collections():
     global collections
 
+
 def send_telemetry_message_to_database(json_data: str):
     """
     Send a preserialized JSON message to the database.
@@ -24,21 +25,62 @@ def send_telemetry_message_to_database(json_data: str):
     # Extract the table name from the JSON data
     json_data = (json_data)
     if len(list(json_data.keys())) < 3:
-        (f"Received, poorly formed json: {json_data}")
+        print(f"Received, poorly formed json: {json_data}")
         return
 
     table_name = list(json_data.keys())[2]
-
-    (f"Adding an entry to the {table_name} table")
-    (f"Entry: {json_data[table_name]}")
+    print(f"Adding an entry to the {table_name} table")
+    print(f"Entry: {json_data[table_name]}")
 
     # Push the JSON data to PocketBase using the correct schema
     try:
         client.collection(table_name).create(json_data[table_name])
-    except Exception:
-        (f"Failed to create entry in {table_name}: {json_data}")
-        create_table()
+    except Exception as e:
+        print(f"Failed to create entry in {table_name}: {json_data}")
+        print(e)
+        schema = make_schema_from_data(json_data[table_name])
+        create_table(table_name, schema)
         client.collection(table_name).create(json_data[table_name])
+
+
+def make_schema_from_data(json_data):
+    # Build schema fields
+    schema = []
+    for field_name, field_value in json_data.items():
+#make an if statment if a string it should be text, if a int float etc should be a number if a dictionary print out json data
+
+        field_type = "not known"  
+
+        if type(field_value) == str:
+            field_type = "text"
+        elif type(field_value) in [int, float]:
+            field_type = "number"
+        elif type(field_value) == dict:
+            field_type = "json"
+
+        print(field_type)
+
+        field_data = {
+            "name": field_name,
+            "type": field_type,
+            "required": False,
+            "options": {}
+            }
+
+        # Apply type-specific options
+        if field_type == "text":
+            field_data["options"] = {"maxSize": 100000}
+        elif field_type == "number":
+            field_data["options"] = {"min": None, "max": None}
+        schema.append(field_data)
+
+    # Include the created and updated timestamps
+    schema.append({'name': 'updated', 'onCreate': True, 'onUpdate': True, 'type': 'autodate'})
+    schema.append({'name': 'created', 'onCreate': True, 'onUpdate': False, 'type': 'autodate'})
+    return schema
+    #updated_collection = client.collections.update(created_collection.id, update_data)
+
+
 
 def create_table(name, schema):
     #create a collection
@@ -83,96 +125,101 @@ def check_table_exists(table_name: str) -> bool:
 
 
     #table should pass if the table name exists or not. giving parameters it wants to look for (table name)
-    try:
-        client.collections.get_one(table_name)
-        return True
-        #client.collection(table_name).create([table_name])
-    except ClientResponseError:
-        create_table(table_name, {})
-        return False
-def updated_collections() -> bool:
-        if not token:
-            print("DB - No auth token to update collections")
-            return False
+    # try:
+    #     client.collections.get_one(table_name)
+    #     return True
+    #     #client.collection(table_name).create([table_name])
+    # except ClientResponseError:
+    #     create_table(table_name, {})
+    #     return False
+# def updated_collections() -> bool:
+#         if not token:
+#             print("DB - No auth token to update collections")
+#             return False
 
-        # Get the current collections and their schemas from pocket base
-        # Pass the token in the Authorization header
-        headers = {"Authorization": f"Bearer {token}"}
-        # Assuming client is set to a proper instance, request collections
-        collections_url = client + "/api/collections"
-        response = client.get_one(collections_url, headers=headers)
+#         # Get the current collections and their schemas from pocket base
+#         # Pass the token in the Authorization header
+#         headers = {"Authorization": f"Bearer {token}"}
+#         # Assuming client is set to a proper instance, request collections
+#         collections_url = client + "/api/collections"
+#         response = client.get_one(collections_url, headers=headers)
 
-        if response.status_code != 200:
-            print(f"DB - Could not retrieve collection list, err{response.status_code}: {response.text}")
-            return False
+#         if response.status_code != 200:
+#             print(f"DB - Could not retrieve collection list, err{response.status_code}: {response.text}")
+#             return False
 
-        current_schema = {}
-        expected_schema = {}
+#         current_schema = {}
+#         expected_schema = {}
 
-        # Format the current schema for comparison to the expected schema
-        collections_data = response.json()
-        for collection in collections_data["items"]:
-            if collection["system"]: # Skip system collections
-                continue
+#         # Format the current schema for comparison to the expected schema
+#         collections_data = response.json()
+#         for collection in collections_data["items"]:
+#             if collection["system"]: # Skip system collections
+#                 continue
 
-            current_collection_schema = {}
+#             current_collection_schema = {}
 
-            for field in collection["fields"]:
-                if field['system']: # Skip system collections
-                    continue
-                current_collection_schema[field["name"]] = field["type"]
+#             for field in collection["fields"]:
+#                 if field['system']: # Skip system collections
+#                     continue
+#                 current_collection_schema[field["name"]] = field["type"]
 
-            current_schema[collection["name"]] = current_collection_schema
+#             current_schema[collection["name"]] = current_collection_schema
 
-        # Load the expected database schema from the json file
-        # and format to match current schema format for comparison.
-        try:
-            with open(EXPECTED_SCHEMA_JSON, "r") as file:
-                expected_data = json.load(file)
+#         # Load the expected database schema from the json file
+#         # and format to match current schema format for comparison.
+#         try:
+#             with open(EXPECTED_SCHEMA_JSON, "r") as file:
+#                 expected_data = json.load(file)
 
-                for collection in expected_data["collections"]:
-                    collection_name = collection["name"]
-                    collection_schema = collection["schema"]
+#                 for collection in expected_data["collections"]:
+#                     collection_name = collection["name"]
+#                     collection_schema = collection["schema"]
 
-                    expected_collection_schema = {}
-                    for field in collection_schema:
-                        expected_collection_schema[field["name"]] = field["type"]
+#                     expected_collection_schema = {}
+#                     for field in collection_schema:
+#                         expected_collection_schema[field["name"]] = field["type"]
 
-                    # Include the created and updated fields for what is expected
-                    expected_collection_schema["created"] = "autodate"
-                    expected_collection_schema["updated"] = "autodate"
+#                     # Include the created and updated fields for what is expected
+#                     expected_collection_schema["created"] = "autodate"
+#                     expected_collection_schema["updated"] = "autodate"
 
-                    expected_schema[collection_name] = expected_collection_schema
-        except Exception as e:
-            print(f"DB - Could not load expected schema: {e}")
-            return False
+#                     expected_schema[collection_name] = expected_collection_schema
+#         except Exception as e:
+#             print(f"DB - Could not load expected schema: {e}")
+#             return False
 
-        # Update and create collections as needed
-        for expected_collection in expected_schema:
-            # If no collection matches expected collection, create it
-            if expected_collection not in current_schema:
-                print(f"DB - Creating collection {expected_collection}")
-                create_table(expected_collection, expected_schema[expected_collection])
-                continue
+#         # Update and create collections as needed
+#         for expected_collection in expected_schema:
+#             # If no collection matches expected collection, create it
+#             if expected_collection not in current_schema:
+#                 print(f"DB - Creating collection {expected_collection}")
+#                 create_table(expected_collection, expected_schema[expected_collection])
+#                 continue
 
-            if expected_schema[expected_collection] != current_schema[expected_collection]:
-                print(f"DB - Clearing and updating collection {expected_collection}")
-                # Drop the collection and recreate it with the new schema.
-                delete_table(expected_collection)
-                # Create the new schema by combining the default schema with the expected schema.
-                create_table(expected_collection, expected_schema[expected_collection])
-                continue
+#             if expected_schema[expected_collection] != current_schema[expected_collection]:
+#                 print(f"DB - Clearing and updating collection {expected_collection}")
+#                 # Drop the collection and recreate it with the new schema.
+#                 delete_table(expected_collection)
+#                 # Create the new schema by combining the default schema with the expected schema.
+#                 create_table(expected_collection, expected_schema[expected_collection])
+#                 continue
 
-        # Remove any collections that are not in the expected schema
-        for current_collection in current_schema:
-            if current_collection not in expected_schema:
-                print(f"DB - Removing deprecated collection {current_collection}")
-                delete_table(current_collection)
+#         # Remove any collections that are not in the expected schema
+#         for current_collection in current_schema:
+#             if current_collection not in expected_schema:
+#                 print(f"DB - Removing deprecated collection {current_collection}")
+#                 delete_table(current_collection)
 json_data = {
-    "table_tc_data": 
+    "0": 0, "1": 0, "table_tc_data": 
     {"Tc_1": 3,
-    "Tc_2": 4}
+    "Tc_2": 4,
+    "Tc_3": 5,
+    "Tc_4": 'something',
+    "name": {"something": 2,
+             }}
     }
+
 
 send_telemetry_message_to_database(json_data)
     # if table_name in client.collections.get_full_list():
