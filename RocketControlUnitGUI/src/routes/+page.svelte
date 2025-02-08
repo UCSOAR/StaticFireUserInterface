@@ -276,9 +276,9 @@
 		</SlideToggle>
 	</div>
 
-	<div class="pbvs_slide relay_status {relayStatusOutdated ? 'outdated' : ''}">
+	<div class="pbv11_slide relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
-			name="pbvs_slide"
+			name="pbv11_slide"
 			active="bg-primary-500 dark:bg-primary-500"
 			size="sm"
 			bind:checked={$sol5_open}
