@@ -142,6 +142,7 @@
 	$: pbv3_display = $pbv3_open === undefined ? 'N/A' : $pbv3_open ? 'OPEN' : 'CLOSE';
 	$: pbv4_display = $pbv4_open === undefined ? 'N/A' : $pbv4_open ? 'OPEN' : 'CLOSE';
 
+
 	$: sol5_display = $sol5_open === undefined ? 'N/A' : $sol5_open ? 'OPEN' : 'CLOSE';
 	$: sol6_display = $sol6_open === undefined ? 'N/A' : $sol6_open ? 'OPEN' : 'CLOSE';
 	$: sol7_display = $sol7_open === undefined ? 'N/A' : $sol7_open ? 'OPEN' : 'CLOSE';
@@ -158,7 +159,7 @@
 
 	$: mev_display = $mev_open === undefined ? 'N/A' : $mev_open ? 'OPEN' : 'CLOSE';
 
-	$: pt5_pressure_display = $pt5_pressure === undefined ? 'DC' : Number($pt5_pressure).toFixed(2);
+	$: pt5_pressure_display = $pt5_pressure === undefined ? 'N/A' : Number($pt5_pressure).toFixed(2);
 
 	$: tc8_display = $tc8 === undefined ? 'N/A' : Number($tc8).toFixed(2);
 
@@ -276,41 +277,6 @@
 		</SlideToggle>
 	</div>
 
-	<div class="pbv11_slide relay_status {relayStatusOutdated ? 'outdated' : ''}">
-		<SlideToggle
-			name="pbv11_slide"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$sol5_open}
-			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_SOL5', 'RCU_CLOSE_SOL5')}
-		>
-			{sol5_display}
-		</SlideToggle>
-	</div>
-
-	<div class="pbvsomething_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
-		<SlideToggle
-			name="pbvsomething_slider"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$sol6_open}
-			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_SOL6', 'RCU_CLOSE_SOL6')}
-		>
-			{sol6_display}
-		</SlideToggle>
-	</div>
-
-	<div class="pbvs relay_status {relayStatusOutdated ? 'outdated' : ''}">
-		<SlideToggle
-			name="pbvs"
-			active="bg-primary-500 dark:bg-primary-500"
-			size="sm"
-			bind:checked={$sol7_open}
-			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_SOL7', 'RCU_CLOSE_SOL7')}
-		>
-			{sol7_display}
-		</SlideToggle>
-	</div>
 
 	<div class="pbv5_slider relay_status {relayStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
@@ -348,6 +314,18 @@
 		</SlideToggle>
 	</div>
 
+	<div class="pbv8_slider combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
+		<SlideToggle
+			name="pbv8_slider"
+			active="bg-primary-500 dark:bg-primary-500"
+			size="sm"
+			bind:checked={$drain_open}
+			on:click={(e) => handleSliderChange(e, 'NODE_DMB', 'RSC_OPEN_DRAIN', 'RSC_CLOSE_DRAIN')}
+		>
+			{drain_display}
+		</SlideToggle>
+	</div>
+
 	<div class="pbv9_slider combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
 		<SlideToggle
 			name="pbv9_slider"
@@ -371,6 +349,31 @@
 			{drain_display}
 		</SlideToggle>
 	</div>
+
+	<div class="pbv11_slide relay_status {relayStatusOutdated ? 'outdated' : ''}">
+		<SlideToggle
+			name="pbv11_slide"
+			active="bg-primary-500 dark:bg-primary-500"
+			size="sm"
+			bind:checked={$sol5_open}
+			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_SOL5', 'RCU_CLOSE_SOL5')}
+		>
+			{sol5_display}
+		</SlideToggle>
+	</div>
+
+	<div class="pbv12_slide relay_status {relayStatusOutdated ? 'outdated' : ''}">
+		<SlideToggle
+			name="pbv12_slide"
+			active="bg-primary-500 dark:bg-primary-500"
+			size="sm"
+			bind:checked={$sol5_open}
+			on:click={(e) => handleSliderChange(e, 'NODE_RCU', 'RCU_OPEN_SOL5', 'RCU_CLOSE_SOL5')}
+		>
+			{sol5_display}
+		</SlideToggle>
+	</div>
+
 
 	{#if $currentState === "RS_IGNITION" || $currentState === "RS_TEST" || $currentState === "RS_ABORT" || $currentState === "RS_LAUNCH" || $currentState === "RS_BURN" || $currentState === "RS_COAST" || $currentState === "RS_RECOVERY"}
 		<div class="box1_slider">
