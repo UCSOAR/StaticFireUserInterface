@@ -1,6 +1,6 @@
 # Ignore .pre-commit-config.yaml
 .pre-commit-config.yaml
-
+RocketControlUnit/RocketControlUnitGUI/node_modules/*
 
 # ----- Avionics Embedded Gitignore ----- #
 # Object files
