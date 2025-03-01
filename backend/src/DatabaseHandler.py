@@ -4,6 +4,7 @@ import json
 import multiprocessing as mp
 from typing import Tuple
 from pocketbase import Client
+from pocketbase.utils import ClientResponseError
 from pocketbase.services.realtime_service import MessageData
 from dotenv import load_dotenv
 
@@ -60,8 +61,6 @@ class DatabaseHandler():
                 (document.record.message,)
             )
         )
-
-    
             
     @staticmethod
     def _handle_command_callback(document: MessageData):
@@ -88,28 +87,6 @@ class DatabaseHandler():
                 )
             )
         )
-
-    
-    @staticmethod
-    def create_table(self, name, schema):
-        """
-        Creates a collection in PocketBase.
-
-        """
-        #create a collection
-        try:
-            collection_data = {
-            "name": name,
-            "type": "base",
-            "schema": schema
-            }
-            DatabaseHandler.client.collections.create(collection_data)
-            print(f"Collection '{name}' created with schema: {schema}")
-
-        except Exception as e:
-            print(f"An error occurred: {e}")
-   
-
 
     @staticmethod
     def _handle_load_cell_command_callback(document: MessageData):
@@ -153,13 +130,72 @@ class DatabaseHandler():
 
         # Push the JSON data to PocketBase using the correct schema
         try:
-            
             DatabaseHandler.client.collection(table_name).create(json_data[table_name])
-        except Exception:
+        except Exception as e:
             logger.error(f"Failed to create entry in {table_name}: {json_data}")
-        DatabaseHandler.create_table()
-        DatabaseHandler.client.collection(table_name).create(json_data[table_name])
+            print(e)
+            schema = make_schema_from_data(json_data[table_name])
+            DatabaseHandler.create_table(table_name, schema)
+            DatabaseHandler.client.collection(table_name).create(json_data[table_name])
 
+    @staticmethod
+    def make_schema_from_data(json_data):
+        # Build schema fields
+        schema = []
+        for field_name, field_value in json_data.items():
+            print(field_name)
+            print(field_value)
+        #make an if statment if a string it should be text, if a int float etc should be a number if a dictionary print out json data
+
+            field_type = "not known"  
+
+            if type(field_value) == str:
+                field_type = "text"
+            elif type(field_value) in [int, float]:
+                field_type = "number"
+            elif type(field_value) == dict:
+                field_type = "json"
+
+            #print(field_type)
+
+            field_data = {
+                "name": field_name,
+                "type": field_type,
+                "required": False,
+                "options": {}
+                }
+
+            # Apply type-specific options
+            if field_type == "text":
+                field_data["options"] = {"maxSize": 100000}
+            elif field_type == "number":
+                field_data["options"] = {"min": None, "max": None}
+            schema.append(field_data)
+
+        # Include the created and updated timestamps
+        schema.append({'name': 'updated', 'onCreate': True, 'onUpdate': True, 'type': 'autodate'})
+        schema.append({'name': 'created', 'onCreate': True, 'onUpdate': False, 'type': 'autodate'})
+        return schema
+        #updated_collection = client.collections.update(created_collection.id, update_data)
+
+    @staticmethod
+    def create_table(name, schema):
+        """
+        Creates a collection in PocketBase.
+
+        """
+        #create a collection
+        collection_data = {
+        "name": name,
+        "type": "base",
+        "fields": schema
+        }
+        try:
+            DatabaseHandler.client.collections.create(collection_data)
+            print(f"Collection '{name}' created with schema: {schema}")
+        except ClientResponseError as e:
+            print(f"Error creating collection '{name}': {e}")
+   
     @staticmethod
     def send_load_cell_cali_to_database(thread_message: Tuple[str, str]):
         """

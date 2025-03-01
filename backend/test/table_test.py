@@ -5,16 +5,6 @@ import json
 
 client = Client('http://127.0.0.1:8090')
 
-EXPECTED_SCHEMA_JSON = "DatabaseSchema.json"
-token = "None"
-collections = "None"
-
-def tokenfunc():
-  global token
-
-def updated_collections():
-    global collections
-
 
 def send_telemetry_message_to_database(json_data: str):
     """
