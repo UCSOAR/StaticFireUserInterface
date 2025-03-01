@@ -47,6 +47,8 @@ def make_schema_from_data(json_data):
     # Build schema fields
     schema = []
     for field_name, field_value in json_data.items():
+        print(field_name)
+        print(field_value)
 #make an if statment if a string it should be text, if a int float etc should be a number if a dictionary print out json data
 
         field_type = "not known"  
@@ -58,7 +60,7 @@ def make_schema_from_data(json_data):
         elif type(field_value) == dict:
             field_type = "json"
 
-        print(field_type)
+        #print(field_type)
 
         field_data = {
             "name": field_name,
@@ -87,7 +89,7 @@ def create_table(name, schema):
     collection_data = {
     "name": name,
     "type": "base",
-    "schema": schema
+    "fields": schema
     }
     try:
         client.collections.create(collection_data)
@@ -95,17 +97,7 @@ def create_table(name, schema):
     except ClientResponseError as e:
         print(f"Error creating collection '{name}': {e}")
 
-def delete_table(table_name):
-        for record in client.collection(table_name).get_full_list():
-            client.collection(table_name).delete(record.id)
-
-        # Update the collection with the new schema.
-        collection_to_update = client.collections.get_one(table_name)
-
-        # Delete the existing collection
-        client.collections.delete(collection_to_update.id)
-
-def check_table_exists(table_name: str) -> bool:
+def auth_user(table_name: str) -> bool:
 
     admin_email = "kaileykobar@gmail.com"
     admin_password = "CARtank66$"
@@ -220,7 +212,7 @@ json_data = {
              }}
     }
 
-
+auth_user("TEST_TABLE")
 send_telemetry_message_to_database(json_data)
     # if table_name in client.collections.get_full_list():
     #     print("true")
@@ -243,8 +235,6 @@ send_telemetry_message_to_database(json_data)
 
 
 
-#check_table_exists("TEST_TABLE") #if something is garabage name it should false
-#check_table_exists("TEST_TABLE") #if something is test_table it should be true
 
-
+#look into schema to make it right bc it isnt working
 
