@@ -47,20 +47,20 @@
         mev_open,
         rcu_tc1_temperature,
         rcu_tc2_temperature,
-		pt5_pressure,
+		tc3,
+		tc4,
+		tc5,
+		tc6_temperature,
 		tc8,
+		rcu_tc9,
 		nos1_mass,
 		nos2_mass,
-		tc5,
-		tc3,
+		nos3_temperature,
 		pt1_pressure,
 		pt2_pressure,
 		pt3_pressure,
 		pt4_pressure,
-		nos3_temperature,
-		tc6_temperature,
-		rcu_tc9,
-		tc4,
+		pt5_pressure,
 		pt6_pressure
 	} = stores;
 
@@ -156,32 +156,31 @@
 
 	$: rcu_tc1_display = $rcu_tc1_temperature === undefined ? 'N/A' : $rcu_tc1_temperature;
 	$: rcu_tc2_display = $rcu_tc2_temperature === undefined ? 'N/A' : $rcu_tc2_temperature;
+	$: tc3_display = $tc3 === undefined ? 'N/A' : $tc3;
+	$: tc4_display = $tc4 === undefined ? 'N/A' : ($tc4 / 1000).toFixed(0); // Convert to seconds
+	$: tc6_display = $tc6_temperature === undefined ? 'N/A' : $tc6_temperature;
+	$: tc8_display = $tc8 === undefined ? 'N/A' : Number($tc8).toFixed(2);
+	$: rcu_tc9_display = $rcu_tc9 === undefined ? 'N/A' : $rcu_tc9.replace('SYS_', '');
 
 	$: mev_display = $mev_open === undefined ? 'N/A' : $mev_open ? 'OPEN' : 'CLOSE';
 
-	$: pt5_pressure_display = $pt5_pressure === undefined ? 'N/A' : Number($pt5_pressure).toFixed(2);
-
-	$: tc8_display = $tc8 === undefined ? 'N/A' : Number($tc8).toFixed(2);
 
 	$: nos1_mass_display = $nos1_mass === undefined ? 'N/A' : Number($nos1_mass).toFixed(2);
 	$: nos2_mass_display = $nos2_mass === undefined ? 'N/A' : Number($nos2_mass).toFixed(2);
+	$: nos3_display = $nos3_temperature === undefined ? 'N/A' : $nos3_temperature;
 
 	$: lower_pv_display = $tc5 === undefined ? 'N/A' : $tc5;
 
-	$: tc3_display = $tc3 === undefined ? 'N/A' : $tc3;
+
 
 	$: pt1_pressure_display = $pt1_pressure === undefined ? 'N/A' : $pt1_pressure;
 	$: pt2_pressure_display = $pt2_pressure === undefined ? 'N/A' : $pt2_pressure;
 	$: pt3_pressure_display = $pt3_pressure === undefined ? 'N/A' : $pt3_pressure;
 	$: pt4_pressure_display = $pt4_pressure === undefined ? 'N/A' : $pt4_pressure;
-
-	$: nos3_display = $nos3_temperature === undefined ? 'N/A' : $nos3_temperature;
-	$: tc6_display = $tc6_temperature === undefined ? 'N/A' : $tc6_temperature;
-
-	$: rcu_tc9_display = $rcu_tc9 === undefined ? 'N/A' : $rcu_tc9.replace('SYS_', '');
-
-	$: tc4_display = $tc4 === undefined ? 'N/A' : ($tc4 / 1000).toFixed(0); // Convert to seconds
+	$: pt5_pressure_display = $pt5_pressure === undefined ? 'N/A' : Number($pt5_pressure).toFixed(2);
 	$: pt6_pressure_display = $pt6_pressure === undefined ? 'N/A' : ($pt6_pressure / 1000).toFixed(0); // Convert to seconds
+
+
 
 	$: relayStatusOutdated = Date.now() - timestamps.relay_status > 5000;
 	$: combustionControlStatusOutdated = Date.now() - timestamps.combustion_control_status > 5000;
@@ -477,12 +476,44 @@
 		<p>{rcu_tc2_display}</p>
 	</div>
 
+	<div class="tc3 pbb_temperature {pbbTemperatureOutdated ? 'outdated' : ''}">
+		<p>{tc3_display}</p>
+	</div>
+
+	<div class="tc4 heartbeat {heartbeatOutdated ? 'outdated' : ''}">
+		<p>{tc4_display}</p>
+	</div>
+
+	<div class="tc5 pbb_pressure {pbbPressureOutdated ? 'outdated' : ''}">
+		<p>{lower_pv_display}</p>
+	</div>
+
+	<div class="tc6 sob_temperature {sobTemperatureOutdated ? 'outdated' : ''}">
+		<p>{tc6_display}</p>
+	</div>
+
+	<div class="rcu_tc7 combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
+		<p>{mev_display}</p>
+	</div>
+
+	<div class="tc8 launch_rail_load_cell {launchRailLoadCellOutdated ? 'outdated' : ''}">
+		<p>{tc8_display}</p>
+	</div>
+
+	<div class="rcu_tc9 sys_state {sysStateOutdated ? 'outdated' : ''}">
+		<p>{rcu_tc9_display}</p>
+	</div>
+
 	<div class="nos1 nos_load_cell {nosLoadCellOutdated ? 'outdated' : ''}">
 		<p>{nos1_mass_display}</p>
 	</div>
 
 	<div class="nos2 nos_load_cell {nosLoadCellOutdated ? 'outdated' : ''}">
 		<p>{nos2_mass_display}</p>
+	</div>
+
+	<div class="nos3 sob_temperature {sobTemperatureOutdated ? 'outdated' : ''}">
+		<p>{nos3_display}</p>
 	</div>
 
 	<div class="pt1_pressure rcu_pressure {rcuPressureOutdated ? 'outdated' : ''}">
@@ -501,50 +532,18 @@
 		<p>{pt4_pressure_display}</p>
 	</div>
 
-	<div class="box1_continuity">
-	</div>
-
-	<div class="box2_continuity">
-	</div>
-
-	<div class="rcu_tc7 combustion_control_status {combustionControlStatusOutdated ? 'outdated' : ''}">
-		<p>{mev_display}</p>
-	</div>
-
 	<div class="pt5_pressure">
 		<p>{pt5_pressure_display}</p>
 	</div>
 
-	<div class="tc8 launch_rail_load_cell {launchRailLoadCellOutdated ? 'outdated' : ''}">
-		<p>{tc8_display}</p>
-	</div>
-
-	<div class="tc5 pbb_pressure {pbbPressureOutdated ? 'outdated' : ''}">
-		<p>{lower_pv_display}</p>
-	</div>
-
-	<div class="tc3 pbb_temperature {pbbTemperatureOutdated ? 'outdated' : ''}">
-		<p>{tc3_display}</p>
-	</div>
-
-	<div class="nos3 sob_temperature {sobTemperatureOutdated ? 'outdated' : ''}">
-		<p>{nos3_display}</p>
-	</div>
-
-	<div class="tc6 sob_temperature {sobTemperatureOutdated ? 'outdated' : ''}">
-		<p>{tc6_display}</p>
-	</div>
-
-	<div class="rcu_tc9 sys_state {sysStateOutdated ? 'outdated' : ''}">
-		<p>{rcu_tc9_display}</p>
-	</div>
-
-	<div class="tc4 heartbeat {heartbeatOutdated ? 'outdated' : ''}">
-		<p>{tc4_display}</p>
-	</div>
-
 	<div class="pt6_pressure heartbeat {heartbeatOutdated ? 'outdated' : ''}">
 		<p>{pt6_pressure_display}</p>
+	</div>
+
+	<div class="box1_continuity">
+	</div>
+
+	<div class="box2_continuity">
 	</div>
 
 	<!-- Render different buttons based on the current state -->
